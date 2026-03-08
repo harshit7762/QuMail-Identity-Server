@@ -1,4 +1,3 @@
-from identity_server import app
 from flask import Flask
 # ... your logic ...
 app = Flask(__name__)
