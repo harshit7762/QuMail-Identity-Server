@@ -1,19 +1,24 @@
 import os
 import uvicorn
 from fastapi import FastAPI, Form, HTTPException
+from pydantic import BaseModel
+
+class RegistrationData(BaseModel):
+    email: str
+    level3_pk: str
+    level4_pk: str
 
 app = FastAPI(title="QuMail Identity Registry")
 USER_REGISTRY = {}
 
 # Inside identity_server.py
 @app.post("/register")
-async def register(email: str = Form(...), level3_pk: str = Form(...), level4_pk: str = Form(...)):
-    # This automatically overwrites the old dictionary entry for this email
-    USER_REGISTRY[email] = {
-        "3": level3_pk,
-        "4": level4_pk
+async def register(data: RegistrationData): # Changed from Form(...) to our new Model
+    USER_REGISTRY[data.email] = {
+        "3": data.level3_pk,
+        "4": data.level4_pk
     }
-    return {"status": "success", "detail": f"Keys rotated for {email}"}
+    return {"status": "success", "detail": f"Keys rotated for {data.email}"}
 
 @app.get("/lookup/{email}")
 async def lookup(email: str):
