@@ -10,6 +10,9 @@ class RegistrationData(BaseModel):
 
 app = FastAPI(title="QuMail Identity Registry")
 USER_REGISTRY = {}
+@app.get("/")
+async def root():
+    return {"status": "QuMail Identity Server running"}
 
 # Inside identity_server.py
 @app.post("/register")
